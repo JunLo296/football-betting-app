@@ -266,4 +266,76 @@ describe('Authentication Service', () => {
       await expect(authService.verifyToken(null)).rejects.toThrow('Token is required');
     });
   });
+
+  describe('generateToken', () => {
+    it('should generate a JWT token with payload', () => {
+      const payload = {
+        userId: 1,
+        username: 'testuser'
+      };
+
+      const mockToken = 'generated_jwt_token';
+
+      // Mock jwt.sign to return token
+      jwt.sign.mockReturnValue(mockToken);
+
+      const token = authService.generateToken(payload);
+
+      expect(token).toBe(mockToken);
+      expect(jwt.sign).toHaveBeenCalledWith(
+        payload,
+        'test-secret-key-for-testing',
+        { expiresIn: '7d' }
+      );
+    });
+
+    it('should use custom JWT_EXPIRES_IN if set', () => {
+      process.env.JWT_EXPIRES_IN = '24h';
+
+      const payload = {
+        userId: 2,
+        username: 'anotheruser'
+      };
+
+      const mockToken = 'another_jwt_token';
+
+      // Mock jwt.sign to return token
+      jwt.sign.mockReturnValue(mockToken);
+
+      const token = authService.generateToken(payload);
+
+      expect(token).toBe(mockToken);
+      expect(jwt.sign).toHaveBeenCalledWith(
+        payload,
+        'test-secret-key-for-testing',
+        { expiresIn: '24h' }
+      );
+
+      // Clean up
+      delete process.env.JWT_EXPIRES_IN;
+    });
+
+    it('should generate token with any payload structure', () => {
+      const payload = {
+        userId: 3,
+        username: 'admin',
+        isAdmin: true,
+        customField: 'value'
+      };
+
+      const mockToken = 'custom_jwt_token';
+
+      // Mock jwt.sign to return token
+      jwt.sign.mockReturnValue(mockToken);
+
+      const token = authService.generateToken(payload);
+
+      expect(token).toBe(mockToken);
+      expect(jwt.sign).toHaveBeenCalledWith(
+        payload,
+        'test-secret-key-for-testing',
+        { expiresIn: '7d' }
+      );
+    });
+  });
 });

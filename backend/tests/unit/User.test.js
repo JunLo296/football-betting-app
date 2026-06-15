@@ -16,6 +16,7 @@ describe('User Model', () => {
     mockDb = {
       run: jest.fn(),
       get: jest.fn(),
+      all: jest.fn(),
     };
 
     // Mock initDatabase to return our mock db
@@ -171,6 +172,114 @@ describe('User Model', () => {
       });
 
       await expect(User.findById(1)).rejects.toThrow('Database error');
+    });
+  });
+
+  describe('updateCoins', () => {
+    it('should update user coins successfully', async () => {
+      // Mock successful update
+      mockDb.run.mockImplementation((sql, params, callback) => {
+        callback.call({ changes: 1 }, null);
+      });
+
+      const result = await User.updateCoins(1, 50);
+
+      expect(result).toEqual({ changes: 1 });
+      expect(mockDb.run).toHaveBeenCalledWith(
+        expect.stringContaining('UPDATE users SET total_coins = total_coins + ? WHERE id = ?'),
+        [50, 1],
+        expect.any(Function)
+      );
+    });
+
+    it('should handle negative coin amounts', async () => {
+      // Mock successful update
+      mockDb.run.mockImplementation((sql, params, callback) => {
+        callback.call({ changes: 1 }, null);
+      });
+
+      const result = await User.updateCoins(1, -25);
+
+      expect(result).toEqual({ changes: 1 });
+      expect(mockDb.run).toHaveBeenCalledWith(
+        expect.stringContaining('UPDATE users SET total_coins = total_coins + ? WHERE id = ?'),
+        [-25, 1],
+        expect.any(Function)
+      );
+    });
+
+    it('should return changes: 0 if user not found', async () => {
+      // Mock update with no changes
+      mockDb.run.mockImplementation((sql, params, callback) => {
+        callback.call({ changes: 0 }, null);
+      });
+
+      const result = await User.updateCoins(999, 50);
+
+      expect(result).toEqual({ changes: 0 });
+    });
+
+    it('should handle database errors', async () => {
+      mockDb.run.mockImplementation((sql, params, callback) => {
+        callback.call({}, new Error('Database error'));
+      });
+
+      await expect(User.updateCoins(1, 50)).rejects.toThrow('Database error');
+    });
+  });
+
+  describe('getAll', () => {
+    it('should return all users without password_hash', async () => {
+      const mockUsers = [
+        {
+          id: 1,
+          username: 'user1',
+          email: 'user1@example.com',
+          is_admin: 0,
+          total_coins: 100,
+          created_at: new Date().toISOString()
+        },
+        {
+          id: 2,
+          username: 'user2',
+          email: 'user2@example.com',
+          is_admin: 1,
+          total_coins: 200,
+          created_at: new Date().toISOString()
+        }
+      ];
+
+      mockDb.all.mockImplementation((sql, params, callback) => {
+        callback(null, mockUsers);
+      });
+
+      const users = await User.getAll();
+
+      expect(users).toEqual(mockUsers);
+      expect(mockDb.all).toHaveBeenCalledWith(
+        expect.stringContaining('SELECT id, username, email, is_admin, total_coins, created_at FROM users'),
+        [],
+        expect.any(Function)
+      );
+    });
+
+    it('should return empty array if no users exist', async () => {
+      mockDb.all.mockImplementation((sql, params, callback) => {
+        callback(null, []);
+      });
+
+      const users = await User.getAll();
+
+      expect(users).toEqual([]);
+      expect(mockDb.all).toHaveBeenCalled();
+    });
+
+    it('should handle database errors', async () => {
+      mockDb.all.mockImplementation((sql, params, callback) => {
+        callback(new Error('Database error'));
+      });
+
+      await expect(User.getAll()).rejects.toThrow('Database error');
     });
   });
 });

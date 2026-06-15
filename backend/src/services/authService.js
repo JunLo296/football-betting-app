@@ -55,6 +55,15 @@ async function register({ username, password, email }) {
 }
 
 /**
+ * Generate JWT token
+ * @param {Object} payload - Token payload
+ * @returns {string} JWT token
+ */
+function generateToken(payload) {
+  return jwt.sign(payload, getJwtSecret(), { expiresIn: getJwtExpiresIn() });
+}
+
+/**
  * Login user with credentials
  * @param {Object} credentials - Login credentials
  * @param {string} credentials.username - Username
@@ -80,11 +89,7 @@ async function login({ username, password }) {
   }
 
   // Generate JWT token
-  const token = jwt.sign(
-    { userId: user.id, username: user.username },
-    getJwtSecret(),
-    { expiresIn: getJwtExpiresIn() }
-  );
+  const token = generateToken({ userId: user.id, username: user.username });
 
   // Return token and user info (excluding password_hash)
   return {
@@ -137,5 +142,6 @@ async function verifyToken(token) {
 module.exports = {
   register,
   login,
-  verifyToken
+  verifyToken,
+  generateToken
 };

@@ -92,6 +92,48 @@ class User {
       });
     });
   }
+
+  /**
+   * Update user's coin balance
+   * @param {number} userId - User ID
+   * @param {number} amount - Amount to add (can be negative)
+   * @returns {Promise<Object>} Object with changes count
+   */
+  static async updateCoins(userId, amount) {
+    const db = await this.getDb();
+
+    return new Promise((resolve, reject) => {
+      const sql = 'UPDATE users SET total_coins = total_coins + ? WHERE id = ?';
+
+      db.run(sql, [amount, userId], function(err) {
+        if (err) {
+          reject(err);
+          return;
+        }
+        resolve({ changes: this.changes });
+      });
+    });
+  }
+
+  /**
+   * Get all users
+   * @returns {Promise<Array>} Array of user objects (without password_hash)
+   */
+  static async getAll() {
+    const db = await this.getDb();
+
+    return new Promise((resolve, reject) => {
+      const sql = 'SELECT id, username, email, is_admin, total_coins, created_at FROM users';
+
+      db.all(sql, [], (err, rows) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+        resolve(rows);
+      });
+    });
+  }
 }
 
 module.exports = User;
