@@ -11,18 +11,28 @@ function initDatabase() {
     fs.mkdirSync(dbDir, { recursive: true });
   }
 
-  const db = new sqlite3.Database(DB_PATH, (err) => {
-    if (err) {
-      console.error('Error opening database:', err);
-      throw err;
-    }
-    console.log('Connected to SQLite database');
+  return new Promise((resolve, reject) => {
+    const db = new sqlite3.Database(DB_PATH, (err) => {
+      if (err) {
+        console.error('Error opening database:', err);
+        reject(err);
+        return;
+      }
+      console.log('Connected to SQLite database');
+
+      db.configure('busyTimeout', 3000);
+
+      db.run('PRAGMA foreign_keys = ON', (err) => {
+        if (err) {
+          console.error('Error enabling foreign keys:', err);
+          reject(err);
+          return;
+        }
+        console.log('Foreign keys enabled');
+        resolve(db);
+      });
+    });
   });
-
-  db.configure('busyTimeout', 3000);
-  db.run('PRAGMA foreign_keys = ON');
-
-  return db;
 }
 
 function runMigrations(db) {
