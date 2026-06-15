@@ -1,5 +1,6 @@
 // backend/tests/integration/auth.test.js
 const request = require('supertest');
+const bcrypt = require('bcryptjs');
 const { initDatabase, runMigrations } = require('../../src/config/database');
 const User = require('../../src/models/User');
 
@@ -40,9 +41,37 @@ describe('Auth Integration Tests', () => {
   });
 
   describe('POST /api/auth/register', () => {
-    it('should register a new user successfully', async () => {
+    let adminToken;
+
+    beforeEach(async () => {
+      // Create admin user by directly inserting into database
+      const hashedPassword = await bcrypt.hash('admin123', 10);
+
+      await new Promise((resolve, reject) => {
+        testDb.run(
+          'INSERT INTO users (username, password_hash, email, is_admin, total_coins) VALUES (?, ?, ?, ?, ?)',
+          ['admin', hashedPassword, 'admin@example.com', 1, 0],
+          (err) => {
+            if (err) reject(err);
+            else resolve();
+          }
+        );
+      });
+
+      // Login as admin to get token
+      const adminLogin = await request(app)
+        .post('/api/auth/login')
+        .send({
+          username: 'admin',
+          password: 'admin123'
+        });
+      adminToken = adminLogin.body.token;
+    });
+
+    it('should register a new user successfully with admin token', async () => {
       const response = await request(app)
         .post('/api/auth/register')
+        .set('Authorization', `Bearer ${adminToken}`)
         .send({
           username: 'testuser',
           password: 'password123',
@@ -59,9 +88,59 @@ describe('Auth Integration Tests', () => {
       expect(response.body).not.toHaveProperty('password');
     });
 
+    it('should reject registration without admin token', async () => {
+      const response = await request(app)
+        .post('/api/auth/register')
+        .send({
+          username: 'unauthorized',
+          password: 'password123',
+          email: 'unauth@example.com'
+        });
+
+      expect(response.status).toBe(401);
+      expect(response.body).toHaveProperty('error');
+      expect(response.body.error).toContain('No token provided');
+    });
+
+    it('should reject registration with non-admin token', async () => {
+      // Register a regular user using admin token
+      await request(app)
+        .post('/api/auth/register')
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({
+          username: 'regularuser',
+          password: 'user123',
+          email: 'user@example.com'
+        });
+
+      // Login as regular user
+      const userLogin = await request(app)
+        .post('/api/auth/login')
+        .send({
+          username: 'regularuser',
+          password: 'user123'
+        });
+      const userToken = userLogin.body.token;
+
+      // Try to register another user with non-admin token
+      const response = await request(app)
+        .post('/api/auth/register')
+        .set('Authorization', `Bearer ${userToken}`)
+        .send({
+          username: 'anotheruser',
+          password: 'password123',
+          email: 'another@example.com'
+        });
+
+      expect(response.status).toBe(403);
+      expect(response.body).toHaveProperty('error');
+      expect(response.body.error).toContain('Admin access required');
+    });
+
     it('should fail with missing username', async () => {
       const response = await request(app)
         .post('/api/auth/register')
+        .set('Authorization', `Bearer ${adminToken}`)
         .send({
           password: 'password123'
         });
@@ -74,6 +153,7 @@ describe('Auth Integration Tests', () => {
     it('should fail with missing password', async () => {
       const response = await request(app)
         .post('/api/auth/register')
+        .set('Authorization', `Bearer ${adminToken}`)
         .send({
           username: 'testuser'
         });
@@ -86,6 +166,7 @@ describe('Auth Integration Tests', () => {
     it('should fail with short username', async () => {
       const response = await request(app)
         .post('/api/auth/register')
+        .set('Authorization', `Bearer ${adminToken}`)
         .send({
           username: 'ab',
           password: 'password123'
@@ -98,6 +179,7 @@ describe('Auth Integration Tests', () => {
     it('should fail with short password', async () => {
       const response = await request(app)
         .post('/api/auth/register')
+        .set('Authorization', `Bearer ${adminToken}`)
         .send({
           username: 'testuser',
           password: '12345'
@@ -111,6 +193,7 @@ describe('Auth Integration Tests', () => {
       // First registration
       await request(app)
         .post('/api/auth/register')
+        .set('Authorization', `Bearer ${adminToken}`)
         .send({
           username: 'testuser',
           password: 'password123'
@@ -119,6 +202,7 @@ describe('Auth Integration Tests', () => {
       // Second registration with same username
       const response = await request(app)
         .post('/api/auth/register')
+        .set('Authorization', `Bearer ${adminToken}`)
         .send({
           username: 'testuser',
           password: 'password456'
@@ -131,6 +215,7 @@ describe('Auth Integration Tests', () => {
     it('should register user without email', async () => {
       const response = await request(app)
         .post('/api/auth/register')
+        .set('Authorization', `Bearer ${adminToken}`)
         .send({
           username: 'testuser',
           password: 'password123'
@@ -143,10 +228,36 @@ describe('Auth Integration Tests', () => {
   });
 
   describe('POST /api/auth/login', () => {
+    let adminToken;
+
     beforeEach(async () => {
-      // Register a test user for login tests
+      // Create admin user by directly inserting into database
+      const hashedPassword = await bcrypt.hash('admin123', 10);
+
+      await new Promise((resolve, reject) => {
+        testDb.run(
+          'INSERT INTO users (username, password_hash, email, is_admin, total_coins) VALUES (?, ?, ?, ?, ?)',
+          ['admin', hashedPassword, 'admin@example.com', 1, 0],
+          (err) => {
+            if (err) reject(err);
+            else resolve();
+          }
+        );
+      });
+
+      // Login as admin to get token
+      const adminLogin = await request(app)
+        .post('/api/auth/login')
+        .send({
+          username: 'admin',
+          password: 'admin123'
+        });
+      adminToken = adminLogin.body.token;
+
+      // Register a test user for login tests using admin token
       await request(app)
         .post('/api/auth/register')
+        .set('Authorization', `Bearer ${adminToken}`)
         .send({
           username: 'testuser',
           password: 'password123',
@@ -224,11 +335,36 @@ describe('Auth Integration Tests', () => {
 
   describe('GET /api/auth/me', () => {
     let authToken;
+    let adminToken;
 
     beforeEach(async () => {
+      // Create admin user by directly inserting into database
+      const hashedPassword = await bcrypt.hash('admin123', 10);
+
+      await new Promise((resolve, reject) => {
+        testDb.run(
+          'INSERT INTO users (username, password_hash, email, is_admin, total_coins) VALUES (?, ?, ?, ?, ?)',
+          ['admin', hashedPassword, 'admin@example.com', 1, 0],
+          (err) => {
+            if (err) reject(err);
+            else resolve();
+          }
+        );
+      });
+
+      // Login as admin to get token
+      const adminLogin = await request(app)
+        .post('/api/auth/login')
+        .send({
+          username: 'admin',
+          password: 'admin123'
+        });
+      adminToken = adminLogin.body.token;
+
       // Register and login to get a token
       await request(app)
         .post('/api/auth/register')
+        .set('Authorization', `Bearer ${adminToken}`)
         .send({
           username: 'testuser',
           password: 'password123',
@@ -308,21 +444,18 @@ describe('Auth Integration Tests', () => {
     let userToken;
 
     beforeEach(async () => {
-      // Register admin user
-      await request(app)
-        .post('/api/auth/register')
-        .send({
-          username: 'admin',
-          password: 'admin123',
-          email: 'admin@example.com'
-        });
+      // Create admin user by directly inserting into database
+      const hashedPassword = await bcrypt.hash('admin123', 10);
 
-      // Make the user admin by directly updating the database
       await new Promise((resolve, reject) => {
-        testDb.run('UPDATE users SET is_admin = 1 WHERE username = ?', ['admin'], (err) => {
-          if (err) reject(err);
-          else resolve();
-        });
+        testDb.run(
+          'INSERT INTO users (username, password_hash, email, is_admin, total_coins) VALUES (?, ?, ?, ?, ?)',
+          ['admin', hashedPassword, 'admin@example.com', 1, 0],
+          (err) => {
+            if (err) reject(err);
+            else resolve();
+          }
+        );
       });
 
       // Login as admin
@@ -334,9 +467,10 @@ describe('Auth Integration Tests', () => {
         });
       adminToken = adminLogin.body.token;
 
-      // Register regular user
+      // Register regular user using admin token
       await request(app)
         .post('/api/auth/register')
+        .set('Authorization', `Bearer ${adminToken}`)
         .send({
           username: 'regularuser',
           password: 'user123',

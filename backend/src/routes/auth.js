@@ -3,12 +3,13 @@ const express = require('express');
 const router = express.Router();
 const authService = require('../services/authService');
 const authenticate = require('../middleware/auth');
+const requireAdmin = require('../middleware/admin');
 
 /**
  * POST /api/auth/register
- * Register a new user
+ * Register a new user (admin-only)
  */
-router.post('/register', async (req, res) => {
+router.post('/register', authenticate, requireAdmin, async (req, res) => {
   try {
     const { username, password, email } = req.body;
 
