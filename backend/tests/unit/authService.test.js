@@ -28,7 +28,13 @@ describe('Authentication Service', () => {
       };
 
       const hashedPassword = 'hashed_password_123';
-      const userId = 1;
+      const createdUser = {
+        id: 1,
+        username: userData.username,
+        email: userData.email,
+        is_admin: false,
+        total_coins: 0
+      };
 
       // Mock bcrypt hash
       bcrypt.hash.mockResolvedValue(hashedPassword);
@@ -36,22 +42,97 @@ describe('Authentication Service', () => {
       // Mock User.findByUsername to return null (user doesn't exist)
       User.findByUsername.mockResolvedValue(null);
 
-      // Mock User.create to return the new user ID
-      User.create.mockResolvedValue(userId);
+      // Mock User.create to return the new user object
+      User.create.mockResolvedValue(createdUser);
 
       const result = await authService.register(userData);
 
-      expect(result).toEqual({
-        userId,
-        username: userData.username
-      });
+      expect(result).toEqual(createdUser);
 
       expect(User.findByUsername).toHaveBeenCalledWith(userData.username);
       expect(bcrypt.hash).toHaveBeenCalledWith(userData.password, 10);
       expect(User.create).toHaveBeenCalledWith({
         username: userData.username,
         password_hash: hashedPassword,
-        email: userData.email
+        email: userData.email,
+        is_admin: false
+      });
+    });
+
+    it('should register a new admin user when is_admin is true', async () => {
+      const userData = {
+        username: 'adminuser',
+        password: 'password123',
+        email: 'admin@example.com',
+        is_admin: true
+      };
+
+      const hashedPassword = 'hashed_password_123';
+      const createdUser = {
+        id: 2,
+        username: userData.username,
+        email: userData.email,
+        is_admin: true,
+        total_coins: 0
+      };
+
+      // Mock bcrypt hash
+      bcrypt.hash.mockResolvedValue(hashedPassword);
+
+      // Mock User.findByUsername to return null (user doesn't exist)
+      User.findByUsername.mockResolvedValue(null);
+
+      // Mock User.create to return the new user object
+      User.create.mockResolvedValue(createdUser);
+
+      const result = await authService.register(userData);
+
+      expect(result).toEqual(createdUser);
+
+      expect(User.findByUsername).toHaveBeenCalledWith(userData.username);
+      expect(bcrypt.hash).toHaveBeenCalledWith(userData.password, 10);
+      expect(User.create).toHaveBeenCalledWith({
+        username: userData.username,
+        password_hash: hashedPassword,
+        email: userData.email,
+        is_admin: true
+      });
+    });
+
+    it('should default is_admin to false when not provided', async () => {
+      const userData = {
+        username: 'regularuser',
+        password: 'password123',
+        email: 'regular@example.com'
+      };
+
+      const hashedPassword = 'hashed_password_123';
+      const createdUser = {
+        id: 3,
+        username: userData.username,
+        email: userData.email,
+        is_admin: false,
+        total_coins: 0
+      };
+
+      // Mock bcrypt hash
+      bcrypt.hash.mockResolvedValue(hashedPassword);
+
+      // Mock User.findByUsername to return null (user doesn't exist)
+      User.findByUsername.mockResolvedValue(null);
+
+      // Mock User.create to return the new user object
+      User.create.mockResolvedValue(createdUser);
+
+      const result = await authService.register(userData);
+
+      expect(result.is_admin).toBe(false);
+
+      expect(User.create).toHaveBeenCalledWith({
+        username: userData.username,
+        password_hash: hashedPassword,
+        email: userData.email,
+        is_admin: false
       });
     });
 

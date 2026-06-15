@@ -13,9 +13,10 @@ const getJwtExpiresIn = () => process.env.JWT_EXPIRES_IN || '7d';
  * @param {string} userData.username - Username
  * @param {string} userData.password - Plain text password
  * @param {string} userData.email - Email (optional)
+ * @param {boolean} userData.is_admin - Admin flag (optional, defaults to false)
  * @returns {Promise<Object>} Created user info
  */
-async function register({ username, password, email }) {
+async function register({ username, password, email, is_admin = false }) {
   // Validate required fields
   if (!username) {
     throw new Error('Username is required');
@@ -42,16 +43,17 @@ async function register({ username, password, email }) {
   const password_hash = await bcrypt.hash(password, 10);
 
   // Create user
-  const userId = await User.create({
+  const user = await User.create({
     username,
     password_hash,
-    email: email || null
+    email: email || null,
+    is_admin
   });
 
-  return {
-    userId,
-    username
-  };
+  // Remove password_hash from response (User.create doesn't include it, but being explicit)
+  delete user.password_hash;
+
+  return user;
 }
 
 /**

@@ -29,15 +29,16 @@ class User {
    * @param {string} userData.username - Username (unique)
    * @param {string} userData.password_hash - Hashed password
    * @param {string} userData.email - Email address (optional)
-   * @returns {Promise<number>} User ID of created user
+   * @param {boolean} userData.is_admin - Admin flag (optional, defaults to false)
+   * @returns {Promise<Object>} Created user object with id, username, email, is_admin, total_coins
    */
-  static async create({ username, password_hash, email }) {
+  static async create({ username, password_hash, email, is_admin = false }) {
     const db = await this.getDb();
 
     return new Promise((resolve, reject) => {
-      const sql = 'INSERT INTO users (username, password_hash, email) VALUES (?, ?, ?)';
+      const sql = 'INSERT INTO users (username, password_hash, email, is_admin, total_coins) VALUES (?, ?, ?, ?, 0)';
 
-      db.run(sql, [username, password_hash, email], function(err) {
+      db.run(sql, [username, password_hash, email, is_admin ? 1 : 0], function(err) {
         if (err) {
           if (err.code === 'SQLITE_CONSTRAINT') {
             reject(new Error('Username already exists'));
@@ -46,7 +47,13 @@ class User {
           }
           return;
         }
-        resolve(this.lastID);
+        resolve({
+          id: this.lastID,
+          username,
+          email,
+          is_admin,
+          total_coins: 0
+        });
       });
     });
   }

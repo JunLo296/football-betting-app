@@ -39,12 +39,69 @@ describe('User Model', () => {
         callback.call({ lastID: 1 }, null);
       });
 
-      const userId = await User.create(userData);
+      const user = await User.create(userData);
 
-      expect(userId).toBe(1);
+      expect(user).toEqual({
+        id: 1,
+        username: userData.username,
+        email: userData.email,
+        is_admin: false,
+        total_coins: 0
+      });
       expect(mockDb.run).toHaveBeenCalledWith(
         expect.stringContaining('INSERT INTO users'),
-        [userData.username, userData.password_hash, userData.email],
+        [userData.username, userData.password_hash, userData.email, 0],
+        expect.any(Function)
+      );
+    });
+
+    it('should create a new admin user when is_admin is true', async () => {
+      const userData = {
+        username: 'adminuser',
+        password_hash: 'hashedpassword123',
+        email: 'admin@example.com',
+        is_admin: true
+      };
+
+      // Mock successful insert
+      mockDb.run.mockImplementation((sql, params, callback) => {
+        callback.call({ lastID: 2 }, null);
+      });
+
+      const user = await User.create(userData);
+
+      expect(user).toEqual({
+        id: 2,
+        username: userData.username,
+        email: userData.email,
+        is_admin: true,
+        total_coins: 0
+      });
+      expect(mockDb.run).toHaveBeenCalledWith(
+        expect.stringContaining('INSERT INTO users'),
+        [userData.username, userData.password_hash, userData.email, 1],
+        expect.any(Function)
+      );
+    });
+
+    it('should default is_admin to false when not provided', async () => {
+      const userData = {
+        username: 'regularuser',
+        password_hash: 'hashedpassword123',
+        email: 'regular@example.com'
+      };
+
+      // Mock successful insert
+      mockDb.run.mockImplementation((sql, params, callback) => {
+        callback.call({ lastID: 3 }, null);
+      });
+
+      const user = await User.create(userData);
+
+      expect(user.is_admin).toBe(false);
+      expect(mockDb.run).toHaveBeenCalledWith(
+        expect.stringContaining('INSERT INTO users'),
+        [userData.username, userData.password_hash, userData.email, 0],
         expect.any(Function)
       );
     });
