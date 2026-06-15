@@ -17,6 +17,14 @@ class User {
   }
 
   /**
+   * Set database instance (for testing purposes)
+   * @param {Database} db - Database instance
+   */
+  static setDb(db) {
+    this.dbPromise = Promise.resolve(db);
+  }
+
+  /**
    * Reset database promise (for testing purposes)
    */
   static resetDb() {

@@ -5,14 +5,19 @@ const path = require('path');
 
 const DB_PATH = process.env.DATABASE_PATH || './data/betting.db';
 
-function initDatabase() {
-  const dbDir = path.dirname(DB_PATH);
-  if (!fs.existsSync(dbDir)) {
-    fs.mkdirSync(dbDir, { recursive: true });
+function initDatabase(dbPath = null) {
+  const finalDbPath = dbPath || DB_PATH;
+
+  // Only create directory for file-based databases
+  if (finalDbPath !== ':memory:') {
+    const dbDir = path.dirname(finalDbPath);
+    if (!fs.existsSync(dbDir)) {
+      fs.mkdirSync(dbDir, { recursive: true });
+    }
   }
 
   return new Promise((resolve, reject) => {
-    const db = new sqlite3.Database(DB_PATH, (err) => {
+    const db = new sqlite3.Database(finalDbPath, (err) => {
       if (err) {
         console.error('Error opening database:', err);
         reject(err);
