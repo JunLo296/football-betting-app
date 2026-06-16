@@ -39,4 +39,43 @@ api.interceptors.response.use(
   }
 )
 
+// API service with all endpoints
+export const apiService = {
+  // Auth endpoints
+  auth: {
+    login: (username, password) => api.post('/auth/login', { username, password }),
+    getCurrentUser: () => api.get('/auth/me'),
+  },
+
+  // Match endpoints
+  matches: {
+    getAll: (params = {}) => api.get('/matches', { params }),
+    getById: (id) => api.get(`/matches/${id}`),
+  },
+
+  // Bet endpoints
+  bets: {
+    placeBet: (matchId, outcome, coinsBet) =>
+      api.post('/bets', { match_id: matchId, outcome, coins_bet: coinsBet }),
+    getMyBets: () => api.get('/bets/my-bets'),
+    getMatchBets: (matchId) => api.get(`/bets/match/${matchId}`),
+  },
+
+  // Leaderboard endpoint
+  leaderboard: {
+    get: () => api.get('/leaderboard'),
+  },
+
+  // Admin endpoints
+  admin: {
+    createMatch: (matchData) => api.post('/admin/matches', matchData),
+    updateOdds: (matchId, odds) => api.patch(`/admin/matches/${matchId}/odds`, odds),
+    confirmResult: (matchId, result) =>
+      api.post(`/admin/matches/${matchId}/confirm-result`, result),
+    getUsers: () => api.get('/admin/users'),
+    grantCoins: (userId, amount, reason) =>
+      api.post(`/admin/users/${userId}/grant-coins`, { amount, reason }),
+  },
+}
+
 export default api
