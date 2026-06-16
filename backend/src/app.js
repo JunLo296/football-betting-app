@@ -1,6 +1,7 @@
 // backend/src/app.js
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 const authRoutes = require('./routes/auth');
 const matchRoutes = require('./routes/matches');
 const betRoutes = require('./routes/bets');
@@ -15,7 +16,7 @@ const app = express();
 app.use(cors()); // Enable CORS for all routes
 app.use(express.json()); // Parse JSON request bodies
 
-// Routes
+// API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/matches', matchRoutes);
 app.use('/api/bets', betRoutes);
@@ -25,13 +26,25 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/special-bets', specialBetsRoutes);
 
 // Health check endpoint
-app.get('/health', (req, res) => {
-  res.status(200).json({ status: 'ok' });
+app.get('/api/health', (req, res) => {
+  res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-// 404 handler for unknown routes
-app.use((req, res) => {
-  res.status(404).json({ error: 'Route not found' });
+// Serve static frontend files in production
+const publicPath = path.join(__dirname, '../public');
+app.use(express.static(publicPath));
+
+// Serve index.html for all other routes (SPA fallback)
+app.get('*', (req, res, next) => {
+  // Skip if it's an API route
+  if (req.path.startsWith('/api/')) {
+    return next();
+  }
+  res.sendFile(path.join(publicPath, 'index.html'), (err) => {
+    if (err) {
+      res.status(404).json({ error: 'Frontend not found' });
+    }
+  });
 });
 
 // Global error handler

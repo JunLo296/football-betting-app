@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  football-betting-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: football-betting-app
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_EXPIRES_IN=${JWT_EXPIRES_IN:-7d}
+      - DATABASE_PATH=/app/data/betting.db
+      - API_FOOTBALL_KEY=${API_FOOTBALL_KEY}
+      - ODDS_API_KEY=${ODDS_API_KEY}
+    volumes:
+      # Persist SQLite database
+      - ./data:/app/data
+      # Persist logs
+      - ./logs:/app/logs
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/api/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1);})"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+    networks:
+      - football-betting-network
+
+networks:
+  football-betting-network:
+    driver: bridge
+
+volumes:
+  data:
+  logs:
