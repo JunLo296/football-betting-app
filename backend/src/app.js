@@ -2,6 +2,7 @@
 const express = require('express');
 const cors = require('cors');
 const authRoutes = require('./routes/auth');
+const matchRoutes = require('./routes/matches');
 
 const app = express();
 
@@ -11,6 +12,7 @@ app.use(express.json()); // Parse JSON request bodies
 
 // Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/matches', matchRoutes);
 
 // Health check endpoint
 app.get('/health', (req, res) => {
