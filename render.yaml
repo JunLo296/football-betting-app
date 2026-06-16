@@ -3,7 +3,7 @@ services:
     name: football-betting-app
     env: node
     region: frankfurt
-    buildCommand: cd frontend && npm install && npm run build && cd ../backend && npm install
+    buildCommand: bash build.sh
     startCommand: cd backend && npm start
     envVars:
       - key: NODE_ENV

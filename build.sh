@@ -13,7 +13,7 @@ cd ..
 # Install backend dependencies
 echo "Installing backend dependencies..."
 cd backend
-npm install --omit=dev
+npm install
 cd ..
 
 # Copy frontend build to backend public folder
