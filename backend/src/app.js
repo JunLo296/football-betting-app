@@ -4,6 +4,8 @@ const cors = require('cors');
 const authRoutes = require('./routes/auth');
 const matchRoutes = require('./routes/matches');
 const betRoutes = require('./routes/bets');
+const coinRoutes = require('./routes/coins');
+const leaderboardRoutes = require('./routes/leaderboard');
 
 const app = express();
 
@@ -15,6 +17,8 @@ app.use(express.json()); // Parse JSON request bodies
 app.use('/api/auth', authRoutes);
 app.use('/api/matches', matchRoutes);
 app.use('/api/bets', betRoutes);
+app.use('/api/coins', coinRoutes);
+app.use('/api/leaderboard', leaderboardRoutes);
 
 // Health check endpoint
 app.get('/health', (req, res) => {
