@@ -1,5 +1,5 @@
 // backend/src/config/database.js
-const sqlite3 = require('sqlite3').verbose();
+const { BetterSqlite3, SqliteWrapper } = require('./sqlite-wrapper');
 const fs = require('fs');
 const path = require('path');
 
@@ -17,26 +17,21 @@ function initDatabase(dbPath = null) {
   }
 
   return new Promise((resolve, reject) => {
-    const db = new sqlite3.Database(finalDbPath, (err) => {
-      if (err) {
-        console.error('Error opening database:', err);
-        reject(err);
-        return;
-      }
+    try {
+      const betterDb = new BetterSqlite3(finalDbPath);
+      const db = new SqliteWrapper(betterDb);
+
       console.log('Connected to SQLite database');
 
-      db.configure('busyTimeout', 3000);
+      // Enable foreign keys
+      db.pragma('foreign_keys = ON');
+      console.log('Foreign keys enabled');
 
-      db.run('PRAGMA foreign_keys = ON', (err) => {
-        if (err) {
-          console.error('Error enabling foreign keys:', err);
-          reject(err);
-          return;
-        }
-        console.log('Foreign keys enabled');
-        resolve(db);
-      });
-    });
+      resolve(db);
+    } catch (err) {
+      console.error('Error opening database:', err);
+      reject(err);
+    }
   });
 }
 
