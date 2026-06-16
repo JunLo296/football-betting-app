@@ -1,7 +1,7 @@
 // backend/src/server.js
 require('dotenv').config();
 const app = require('./app');
-const { initDatabase } = require('./config/database');
+const { initDatabase, runMigrations } = require('./config/database');
 const cronService = require('./services/cronService');
 
 const PORT = process.env.PORT || 3000;
@@ -36,8 +36,13 @@ async function startServer() {
 
     // Initialize database
     logger.info('Initializing database...');
-    await initDatabase();
-    logger.info('✓ Database initialized successfully');
+    const db = await initDatabase();
+    logger.info('✓ Database connected successfully');
+
+    // Run migrations
+    logger.info('Running database migrations...');
+    await runMigrations(db);
+    logger.info('✓ Database migrations completed successfully');
 
     // Start cron jobs
     logger.info('Starting cron jobs...');
