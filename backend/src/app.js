@@ -41,18 +41,7 @@ app.get('/api/health', (req, res) => {
 const publicPath = path.join(__dirname, '../public');
 app.use(express.static(publicPath));
 
-// Serve index.html for all other routes (SPA fallback)
-app.get('*', (req, res, next) => {
-  // Skip if it's an API route
-  if (req.path.startsWith('/api/')) {
-    return next();
-  }
-  res.sendFile(path.join(publicPath, 'index.html'), (err) => {
-    if (err) {
-      res.status(404).json({ error: 'Frontend not found' });
-    }
-  });
-});
+// SPA fallback removed - use separate frontend dev server in development
 
 // Global error handler
 app.use((err, req, res, next) => {

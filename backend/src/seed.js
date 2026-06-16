@@ -14,7 +14,7 @@ async function seed() {
 
   try {
     // Initialize database
-    const db = initDatabase();
+    const db = await initDatabase();
     await runMigrations(db);
 
     console.log('✓ Database initialized');
