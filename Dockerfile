@@ -7,8 +7,8 @@ WORKDIR /app/frontend
 # Copy frontend package files
 COPY frontend/package*.json ./
 
-# Install ALL frontend dependencies (including dev dependencies for build)
-RUN npm ci
+# Install ALL frontend dependencies
+RUN npm install
 
 # Copy frontend source
 COPY frontend/ ./
@@ -22,14 +22,14 @@ FROM node:18-alpine
 # Set working directory
 WORKDIR /app
 
-# Install SQLite (already included in alpine, but ensure dependencies)
+# Install SQLite
 RUN apk add --no-cache sqlite
 
 # Copy backend package files
 COPY backend/package*.json ./
 
 # Install backend dependencies (production only)
-RUN npm ci --only=production
+RUN npm install --omit=dev
 
 # Copy backend source code
 COPY backend/ ./
