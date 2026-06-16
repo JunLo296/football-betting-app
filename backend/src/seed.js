@@ -38,10 +38,10 @@ async function seed() {
     // Create sample family users
     console.log('\nCreating sample users...');
     const sampleUsers = [
-      { username: 'dad', password: 'dad123', email: 'dad@family.com' },
-      { username: 'mom', password: 'mom123', email: 'mom@family.com' },
-      { username: 'son', password: 'son123', email: 'son@family.com' },
-      { username: 'daughter', password: 'daughter123', email: 'daughter@family.com' }
+      { username: 'yijun', password: '1V81GisuE3xodban', email: 'yijun@family.com' },
+      { username: 'jun', password: 'wmwP+KiiauTfNcb8', email: 'jun@family.com' },
+      { username: 'alex', password: 'faa0E8VYePl+LJ0V', email: 'alex@family.com' },
+      { username: 'max', password: 'TtF/zO3TiO5X8tX8', email: 'max@family.com' }
     ];
 
     const createdUsers = [];
@@ -179,63 +179,63 @@ async function seed() {
     const upcomingMatches = await Match.getAll({ status: 'upcoming' });
 
     if (upcomingMatches.length > 0 && createdUsers.length > 0) {
-      // Dad bets on first match
+      // Yijun bets on first match
       const match1 = upcomingMatches[0];
-      const dadUser = await User.findByUsername('dad');
-      if (dadUser && dadUser.total_coins >= 10) {
+      const yijunUser = await User.findByUsername('yijun');
+      if (yijunUser && yijunUser.total_coins >= 10) {
         try {
           await Bet.create({
-            user_id: dadUser.id,
+            user_id: yijunUser.id,
             match_id: match1.id,
             outcome: 'home_win',
             coins_bet: 10,
             odds_at_bet_time: match1.home_odds
           });
-          await User.updateCoins(dadUser.id, -10);
-          console.log(`✓ Created bet: dad bet 10 coins on ${match1.home_team} to win`);
+          await User.updateCoins(yijunUser.id, -10);
+          console.log(`✓ Created bet: yijun bet 10 coins on ${match1.home_team} to win`);
         } catch (err) {
-          console.log(`⊘ Could not create bet for dad: ${err.message}`);
+          console.log(`⊘ Could not create bet for yijun: ${err.message}`);
         }
       }
 
-      // Mom bets on second match
+      // Jun bets on second match
       if (upcomingMatches.length > 1) {
         const match2 = upcomingMatches[1];
-        const momUser = await User.findByUsername('mom');
-        if (momUser && momUser.total_coins >= 15) {
+        const junUser = await User.findByUsername('jun');
+        if (junUser && junUser.total_coins >= 15) {
           try {
             await Bet.create({
-              user_id: momUser.id,
+              user_id: junUser.id,
               match_id: match2.id,
               outcome: 'draw',
               coins_bet: 15,
               odds_at_bet_time: match2.draw_odds
             });
-            await User.updateCoins(momUser.id, -15);
-            console.log(`✓ Created bet: mom bet 15 coins on draw`);
+            await User.updateCoins(junUser.id, -15);
+            console.log(`✓ Created bet: jun bet 15 coins on draw`);
           } catch (err) {
-            console.log(`⊘ Could not create bet for mom: ${err.message}`);
+            console.log(`⊘ Could not create bet for jun: ${err.message}`);
           }
         }
       }
 
-      // Son bets on third match
+      // Alex bets on third match
       if (upcomingMatches.length > 2) {
         const match3 = upcomingMatches[2];
-        const sonUser = await User.findByUsername('son');
-        if (sonUser && sonUser.total_coins >= 20) {
+        const alexUser = await User.findByUsername('alex');
+        if (alexUser && alexUser.total_coins >= 20) {
           try {
             await Bet.create({
-              user_id: sonUser.id,
+              user_id: alexUser.id,
               match_id: match3.id,
               outcome: 'away_win',
               coins_bet: 20,
               odds_at_bet_time: match3.away_odds
             });
-            await User.updateCoins(sonUser.id, -20);
-            console.log(`✓ Created bet: son bet 20 coins on ${match3.away_team} to win`);
+            await User.updateCoins(alexUser.id, -20);
+            console.log(`✓ Created bet: alex bet 20 coins on ${match3.away_team} to win`);
           } catch (err) {
-            console.log(`⊘ Could not create bet for son: ${err.message}`);
+            console.log(`⊘ Could not create bet for alex: ${err.message}`);
           }
         }
       }
@@ -276,8 +276,12 @@ async function seed() {
     console.log('✓ Seed completed successfully!');
     console.log('========================================');
     console.log('\nYou can now login with:');
-    console.log('  Admin: username=admin, password=admin123');
-    console.log('  Users: username=dad/mom/son/daughter, password=[username]123');
+    console.log('  Admin:  username=admin, password=admin123');
+    console.log('  Family Users:');
+    console.log('    username=yijun, password=1V81GisuE3xodban');
+    console.log('    username=jun,   password=wmwP+KiiauTfNcb8');
+    console.log('    username=alex,  password=faa0E8VYePl+LJ0V');
+    console.log('    username=max,   password=TtF/zO3TiO5X8tX8');
     console.log('\n⚠️  Remember to change the admin password after first login!');
     console.log('========================================\n');
 
