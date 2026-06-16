@@ -45,25 +45,32 @@ mkdir temp_deploy
 
 REM Copy necessary files (excluding node_modules and other build artifacts)
 echo Copying files...
-xcopy /E /I /Y Dockerfile temp_deploy\ >nul
-xcopy /E /I /Y docker-compose.yml temp_deploy\ >nul
-xcopy /E /I /Y .dockerignore temp_deploy\ >nul
-xcopy /E /I /Y .env.example temp_deploy\ >nul
-xcopy /E /I /Y README.md temp_deploy\ >nul
-xcopy /E /I /Y MYCLOUD_SETUP.md temp_deploy\ >nul
-xcopy /E /I /Y setup-nas.sh temp_deploy\ >nul
+copy Dockerfile temp_deploy\ >nul 2>&1
+copy docker-compose.yml temp_deploy\ >nul 2>&1
+copy .dockerignore temp_deploy\ >nul 2>&1
+copy .env.example temp_deploy\ >nul 2>&1
+copy README.md temp_deploy\ >nul 2>&1
+copy MYCLOUD_SETUP.md temp_deploy\ >nul 2>&1
+copy setup-nas.sh temp_deploy\ >nul 2>&1
 
 echo Copying backend...
-xcopy /E /I /Y backend\src temp_deploy\backend\src\ >nul
-xcopy /E /I /Y backend\package*.json temp_deploy\backend\ >nul
-if exist "backend\.env.example" xcopy /Y backend\.env.example temp_deploy\backend\ >nul
+mkdir temp_deploy\backend >nul 2>&1
+mkdir temp_deploy\backend\src >nul 2>&1
+xcopy /E /I /Y backend\src\* temp_deploy\backend\src\ >nul 2>&1
+copy backend\package.json temp_deploy\backend\ >nul 2>&1
+copy backend\package-lock.json temp_deploy\backend\ >nul 2>&1
+if exist "backend\.env.example" copy backend\.env.example temp_deploy\backend\ >nul 2>&1
 
 echo Copying frontend...
-xcopy /E /I /Y frontend\src temp_deploy\frontend\src\ >nul
-xcopy /E /I /Y frontend\public temp_deploy\frontend\public\ >nul
-xcopy /E /I /Y frontend\index.html temp_deploy\frontend\ >nul
-xcopy /E /I /Y frontend\package*.json temp_deploy\frontend\ >nul
-xcopy /E /I /Y frontend\vite.config.js temp_deploy\frontend\ >nul
+mkdir temp_deploy\frontend >nul 2>&1
+mkdir temp_deploy\frontend\src >nul 2>&1
+mkdir temp_deploy\frontend\public >nul 2>&1
+xcopy /E /I /Y frontend\src\* temp_deploy\frontend\src\ >nul 2>&1
+if exist "frontend\public" xcopy /E /I /Y frontend\public\* temp_deploy\frontend\public\ >nul 2>&1
+copy frontend\index.html temp_deploy\frontend\ >nul 2>&1
+copy frontend\package.json temp_deploy\frontend\ >nul 2>&1
+copy frontend\package-lock.json temp_deploy\frontend\ >nul 2>&1
+copy frontend\vite.config.js temp_deploy\frontend\ >nul 2>&1
 
 echo.
 echo ==========================================
