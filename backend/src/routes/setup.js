@@ -4,11 +4,12 @@ const router = express.Router();
 
 let hasBeenRun = false;
 
-router.post('/initialize-database', async (req, res) => {
+// Function to initialize database
+async function initializeDatabase() {
   if (hasBeenRun) {
-    return res.status(400).json({
+    return {
       error: 'Database has already been initialized. This endpoint can only be run once per deployment.'
-    });
+    };
   }
 
   try {
@@ -114,7 +115,7 @@ router.post('/initialize-database', async (req, res) => {
 
     hasBeenRun = true;
 
-    res.json({
+    return {
       success: true,
       message: 'Database initialized successfully!',
       details: results,
@@ -127,15 +128,33 @@ router.post('/initialize-database', async (req, res) => {
           max: 'max / TtF/zO3TiO5X8tX8'
         }
       }
-    });
+    };
 
   } catch (error) {
     console.error('Database initialization failed:', error);
-    res.status(500).json({
+    return {
       error: 'Failed to initialize database',
       details: error.message
-    });
+    };
   }
+}
+
+// GET endpoint (easier for browser access)
+router.get('/initialize-database', async (req, res) => {
+  const result = await initializeDatabase();
+  if (result.error) {
+    return res.status(400).json(result);
+  }
+  res.json(result);
+});
+
+// POST endpoint
+router.post('/initialize-database', async (req, res) => {
+  const result = await initializeDatabase();
+  if (result.error) {
+    return res.status(400).json(result);
+  }
+  res.json(result);
 });
 
 module.exports = router;
