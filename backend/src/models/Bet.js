@@ -2,9 +2,38 @@
 const { initDatabase } = require('../config/database');
 
 class Bet {
-  static db = initDatabase();
+  // Lazy initialization of database
+  static dbPromise = null;
 
-  static create(betData) {
+  /**
+   * Get database instance with lazy initialization
+   * @returns {Promise<Database>} SQLite database instance
+   */
+  static async getDb() {
+    if (!this.dbPromise) {
+      this.dbPromise = initDatabase();
+    }
+    return await this.dbPromise;
+  }
+
+  /**
+   * Set database instance (for testing purposes)
+   * @param {Database} db - Database instance
+   */
+  static setDb(db) {
+    this.dbPromise = Promise.resolve(db);
+  }
+
+  /**
+   * Reset database promise (for testing purposes)
+   */
+  static resetDb() {
+    this.dbPromise = null;
+  }
+
+  static async create(betData) {
+    const db = await this.getDb();
+
     return new Promise((resolve, reject) => {
       const { user_id, match_id, outcome, coins_bet, odds_at_bet_time } = betData;
 
@@ -13,7 +42,7 @@ class Bet {
         VALUES (?, ?, ?, ?, ?)
       `;
 
-      this.db.run(
+      db.run(
         query,
         [user_id, match_id, outcome, coins_bet, odds_at_bet_time],
         function(err) {
@@ -24,16 +53,20 @@ class Bet {
     });
   }
 
-  static findById(id) {
+  static async findById(id) {
+    const db = await this.getDb();
+
     return new Promise((resolve, reject) => {
-      this.db.get('SELECT * FROM bets WHERE id = ?', [id], (err, row) => {
+      db.get('SELECT * FROM bets WHERE id = ?', [id], (err, row) => {
         if (err) reject(err);
         else resolve(row || null);
       });
     });
   }
 
-  static findByUser(userId) {
+  static async findByUser(userId) {
+    const db = await this.getDb();
+
     return new Promise((resolve, reject) => {
       const query = `
         SELECT b.*, m.home_team, m.away_team, m.kickoff_time, m.status as match_status
@@ -43,14 +76,16 @@ class Bet {
         ORDER BY b.placed_at DESC
       `;
 
-      this.db.all(query, [userId], (err, rows) => {
+      db.all(query, [userId], (err, rows) => {
         if (err) reject(err);
         else resolve(rows);
       });
     });
   }
 
-  static findByMatch(matchId) {
+  static async findByMatch(matchId) {
+    const db = await this.getDb();
+
     return new Promise((resolve, reject) => {
       const query = `
         SELECT b.*, u.username
@@ -59,14 +94,16 @@ class Bet {
         WHERE b.match_id = ?
       `;
 
-      this.db.all(query, [matchId], (err, rows) => {
+      db.all(query, [matchId], (err, rows) => {
         if (err) reject(err);
         else resolve(rows);
       });
     });
   }
 
-  static updatePayout(betId, payout, isWinner) {
+  static async updatePayout(betId, payout, isWinner) {
+    const db = await this.getDb();
+
     return new Promise((resolve, reject) => {
       const query = `
         UPDATE bets
@@ -74,21 +111,23 @@ class Bet {
         WHERE id = ?
       `;
 
-      this.db.run(query, [payout, isWinner ? 1 : 0, betId], function(err) {
+      db.run(query, [payout, isWinner ? 1 : 0, betId], function(err) {
         if (err) reject(err);
         else resolve({ changes: this.changes });
       });
     });
   }
 
-  static getWinningBets(matchId, outcome) {
+  static async getWinningBets(matchId, outcome) {
+    const db = await this.getDb();
+
     return new Promise((resolve, reject) => {
       const query = `
         SELECT * FROM bets
         WHERE match_id = ? AND outcome = ?
       `;
 
-      this.db.all(query, [matchId, outcome], (err, rows) => {
+      db.all(query, [matchId, outcome], (err, rows) => {
         if (err) reject(err);
         else resolve(rows);
       });
