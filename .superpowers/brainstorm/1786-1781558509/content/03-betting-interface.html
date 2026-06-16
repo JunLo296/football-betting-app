@@ -1,0 +1,115 @@
+<h2>Betting Interface - How should users place bets?</h2>
+<p class="subtitle">When user taps "Place Bet" on a match</p>
+
+<div class="mockup">
+  <div class="mockup-header">Betting Modal/Screen</div>
+  <div class="mockup-body">
+    <div style="max-width: 360px; margin: 0 auto; border: 3px solid #333; border-radius: 20px; overflow: hidden; background: white;">
+      <!-- Header -->
+      <div style="background: #2196F3; padding: 16px; color: white;">
+        <div style="text-align: center; font-size: 11px; margin-bottom: 8px;">GROUP A • Today 18:00</div>
+        <div style="display: flex; justify-content: space-around; align-items: center;">
+          <div style="text-align: center;">
+            <div style="font-size: 36px;">🇩🇪</div>
+            <div style="font-size: 14px;">Germany</div>
+          </div>
+          <div style="font-size: 24px;">vs</div>
+          <div style="text-align: center;">
+            <div style="font-size: 36px;">🇪🇸</div>
+            <div style="font-size: 14px;">Spain</div>
+          </div>
+        </div>
+        <div style="text-align: center; margin-top: 12px; font-size: 13px;">
+          💰 Your balance: <strong>47 coins</strong>
+        </div>
+      </div>
+
+      <!-- Betting options -->
+      <div style="padding: 16px;">
+        <div style="font-weight: bold; margin-bottom: 12px; font-size: 14px;">Place Your Bets</div>
+
+        <!-- Home Win -->
+        <div style="border: 2px solid #4CAF50; border-radius: 8px; padding: 12px; margin-bottom: 12px; background: #f1f8f4;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <div>
+              <div style="font-weight: bold;">🇩🇪 Germany Wins</div>
+              <div style="font-size: 12px; color: #666;">Odds: 1.8x</div>
+            </div>
+            <div style="background: #4CAF50; color: white; padding: 4px 12px; border-radius: 12px; font-size: 13px; font-weight: bold;">1.8x</div>
+          </div>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <input type="number" placeholder="0" style="flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 16px;" value="5">
+            <div style="font-size: 13px; color: #666;">coins</div>
+            <div style="font-size: 13px; font-weight: bold; color: #4CAF50;">→ 9.0</div>
+          </div>
+          <div style="font-size: 11px; color: #666; margin-top: 4px;">Potential payout: 9.0 coins</div>
+        </div>
+
+        <!-- Draw -->
+        <div style="border: 2px solid #ddd; border-radius: 8px; padding: 12px; margin-bottom: 12px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <div>
+              <div style="font-weight: bold;">🤝 Draw</div>
+              <div style="font-size: 12px; color: #666;">Odds: 3.2x</div>
+            </div>
+            <div style="background: #FF9800; color: white; padding: 4px 12px; border-radius: 12px; font-size: 13px; font-weight: bold;">3.2x</div>
+          </div>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <input type="number" placeholder="0" style="flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 16px;" value="2">
+            <div style="font-size: 13px; color: #666;">coins</div>
+            <div style="font-size: 13px; font-weight: bold; color: #FF9800;">→ 6.4</div>
+          </div>
+          <div style="font-size: 11px; color: #666; margin-top: 4px;">Potential payout: 6.4 coins</div>
+        </div>
+
+        <!-- Away Win -->
+        <div style="border: 2px solid #ddd; border-radius: 8px; padding: 12px; margin-bottom: 16px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <div>
+              <div style="font-weight: bold;">🇪🇸 Spain Wins</div>
+              <div style="font-size: 12px; color: #666;">Odds: 4.5x</div>
+            </div>
+            <div style="background: #e74c3c; color: white; padding: 4px 12px; border-radius: 12px; font-size: 13px; font-weight: bold;">4.5x</div>
+          </div>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <input type="number" placeholder="0" style="flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 16px;">
+            <div style="font-size: 13px; color: #666;">coins</div>
+            <div style="font-size: 13px; font-weight: bold; color: #999;">→ 0</div>
+          </div>
+          <div style="font-size: 11px; color: #999; margin-top: 4px;">Enter amount to see payout</div>
+        </div>
+
+        <!-- Summary -->
+        <div style="background: #f5f5f5; padding: 12px; border-radius: 8px; margin-bottom: 16px;">
+          <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 4px;">
+            <div>Total bet:</div>
+            <div style="font-weight: bold;">7 coins</div>
+          </div>
+          <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 4px;">
+            <div>Remaining balance:</div>
+            <div style="font-weight: bold;">40 coins</div>
+          </div>
+          <div style="display: flex; justify-content: space-between; font-size: 13px;">
+            <div>Max possible win:</div>
+            <div style="font-weight: bold; color: #4CAF50;">9.0 coins</div>
+          </div>
+        </div>
+
+        <!-- Action buttons -->
+        <button style="width: 100%; background: #4CAF50; color: white; border: none; padding: 14px; border-radius: 8px; font-weight: bold; font-size: 16px; margin-bottom: 8px;">Confirm Bets</button>
+        <button style="width: 100%; background: white; color: #666; border: 1px solid #ddd; padding: 12px; border-radius: 8px; font-weight: bold;">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="margin-top: 2rem;">
+  <h3>Key Features:</h3>
+  <ul>
+    <li><strong>Live calculation:</strong> Shows potential payout as you type</li>
+    <li><strong>Multiple bets:</strong> Can bet on multiple outcomes (hedging)</li>
+    <li><strong>Clear summary:</strong> Shows total spent and remaining balance</li>
+    <li><strong>Visual odds:</strong> Color-coded badges show odds multiplier</li>
+    <li><strong>Validation:</strong> Won't let you bet more than you have</li>
+  </ul>
+</div>

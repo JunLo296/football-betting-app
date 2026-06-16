@@ -1,0 +1,180 @@
+<h2>Main App Layout - Which style works better?</h2>
+<p class="subtitle">Mobile-first design with dashboard view</p>
+
+<div class="cards">
+  <div class="card" data-choice="tabbed" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div class="mockup">
+        <div class="mockup-header">Tabbed Navigation</div>
+        <div class="mockup-body">
+          <!-- Mobile phone mockup -->
+          <div style="max-width: 360px; margin: 0 auto; border: 3px solid #333; border-radius: 20px; overflow: hidden;">
+            <!-- Top bar -->
+            <div style="background: #1a1a1a; padding: 12px; color: white; display: flex; justify-content: space-between; align-items: center;">
+              <div style="font-weight: bold;">⚽ Family Bet</div>
+              <div style="background: #4CAF50; padding: 4px 12px; border-radius: 12px; font-size: 14px;">💰 47 coins</div>
+            </div>
+
+            <!-- Tab navigation -->
+            <div style="display: flex; background: #f0f0f0; border-bottom: 2px solid #ddd;">
+              <div style="flex: 1; padding: 12px; text-align: center; background: white; border-bottom: 3px solid #2196F3; font-weight: bold;">Matches</div>
+              <div style="flex: 1; padding: 12px; text-align: center; color: #666;">My Bets</div>
+              <div style="flex: 1; padding: 12px; text-align: center; color: #666;">Ranking</div>
+            </div>
+
+            <!-- Content area -->
+            <div style="padding: 12px; background: white;">
+              <div style="background: #fff3cd; padding: 8px; border-radius: 8px; margin-bottom: 12px; font-size: 13px;">
+                🎁 +10 coins today!
+              </div>
+
+              <div style="font-weight: bold; margin-bottom: 8px; color: #666; font-size: 12px;">UPCOMING MATCHES</div>
+
+              <!-- Match card -->
+              <div style="border: 1px solid #ddd; border-radius: 8px; padding: 12px; margin-bottom: 8px;">
+                <div style="font-size: 11px; color: #999; margin-bottom: 4px;">GROUP A • Today 18:00</div>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                  <div style="flex: 1; text-align: center;">
+                    <div style="font-size: 24px;">🇩🇪</div>
+                    <div style="font-size: 12px;">Germany</div>
+                  </div>
+                  <div style="font-size: 18px; color: #999;">vs</div>
+                  <div style="flex: 1; text-align: center;">
+                    <div style="font-size: 24px;">🇪🇸</div>
+                    <div style="font-size: 12px;">Spain</div>
+                  </div>
+                </div>
+                <button style="width: 100%; background: #2196F3; color: white; border: none; padding: 10px; border-radius: 6px; font-weight: bold;">Place Bet</button>
+              </div>
+
+              <!-- Another match -->
+              <div style="border: 1px solid #ddd; border-radius: 8px; padding: 12px;">
+                <div style="font-size: 11px; color: #999; margin-bottom: 4px;">GROUP B • Today 21:00</div>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                  <div style="flex: 1; text-align: center;">
+                    <div style="font-size: 24px;">🇧🇷</div>
+                    <div style="font-size: 12px;">Brazil</div>
+                  </div>
+                  <div style="font-size: 18px; color: #999;">vs</div>
+                  <div style="flex: 1; text-align: center;">
+                    <div style="font-size: 24px;">🇦🇷</div>
+                    <div style="font-size: 12px;">Argentina</div>
+                  </div>
+                </div>
+                <button style="width: 100%; background: #2196F3; color: white; border: none; padding: 10px; border-radius: 6px; font-weight: bold;">Place Bet</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>Tabbed Navigation</h3>
+      <p>Clean tabs at top, swipe between sections. All content in one flow.</p>
+      <div class="pros-cons" style="margin-top: 1rem;">
+        <div class="pros">
+          <h4>Pros</h4>
+          <ul>
+            <li>Simple, familiar pattern</li>
+            <li>Fast navigation</li>
+            <li>Clear sections</li>
+          </ul>
+        </div>
+        <div class="cons">
+          <h4>Cons</h4>
+          <ul>
+            <li>Only 3 tabs visible without scrolling</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" data-choice="dashboard" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div class="mockup">
+        <div class="mockup-header">Dashboard with Cards</div>
+        <div class="mockup-body">
+          <!-- Mobile phone mockup -->
+          <div style="max-width: 360px; margin: 0 auto; border: 3px solid #333; border-radius: 20px; overflow: hidden;">
+            <!-- Top bar -->
+            <div style="background: #1a1a1a; padding: 12px; color: white;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <div style="font-weight: bold;">⚽ Family Bet</div>
+                <div>👤 Hans</div>
+              </div>
+              <div style="background: #4CAF50; padding: 8px 12px; border-radius: 12px; text-align: center;">
+                <div style="font-size: 24px; font-weight: bold;">47 coins</div>
+                <div style="font-size: 11px; opacity: 0.8;">🏆 Rank #2</div>
+              </div>
+            </div>
+
+            <!-- Dashboard cards -->
+            <div style="padding: 12px; background: #f5f5f5;">
+              <!-- Quick stats -->
+              <div style="background: #fff3cd; padding: 12px; border-radius: 8px; margin-bottom: 12px; text-align: center;">
+                <div style="font-size: 13px; font-weight: bold;">🎁 Daily Bonus</div>
+                <div style="font-size: 20px; font-weight: bold; color: #f39c12;">+10 coins</div>
+              </div>
+
+              <!-- Section card -->
+              <div style="background: white; border-radius: 8px; padding: 12px; margin-bottom: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                  <div style="font-weight: bold;">🔥 Today's Matches</div>
+                  <div style="background: #e74c3c; color: white; padding: 2px 8px; border-radius: 10px; font-size: 12px;">4 live</div>
+                </div>
+                <div style="font-size: 13px; color: #666; margin-bottom: 8px;">Germany vs Spain in 2h 15m</div>
+                <button style="width: 100%; background: #2196F3; color: white; border: none; padding: 10px; border-radius: 6px; font-weight: bold;">View & Bet</button>
+              </div>
+
+              <!-- My Bets card -->
+              <div style="background: white; border-radius: 8px; padding: 12px; margin-bottom: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                <div style="font-weight: bold; margin-bottom: 8px;">📊 My Active Bets</div>
+                <div style="font-size: 13px; color: #666; margin-bottom: 8px;">12 pending • 15 coins at stake</div>
+                <button style="width: 100%; background: #9C27B0; color: white; border: none; padding: 10px; border-radius: 6px; font-weight: bold;">View My Bets</button>
+              </div>
+
+              <!-- Leaderboard card -->
+              <div style="background: white; border-radius: 8px; padding: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                <div style="font-weight: bold; margin-bottom: 8px;">🏆 Leaderboard</div>
+                <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 4px;">
+                  <div>🥇 Maria</div>
+                  <div style="font-weight: bold;">89 coins</div>
+                </div>
+                <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 4px; background: #e3f2fd; padding: 4px; border-radius: 4px;">
+                  <div>🥈 Hans (You)</div>
+                  <div style="font-weight: bold;">47 coins</div>
+                </div>
+                <div style="display: flex; justify-content: space-between; font-size: 13px;">
+                  <div>🥉 Peter</div>
+                  <div style="font-weight: bold;">34 coins</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>Dashboard with Cards</h3>
+      <p>Home screen shows overview, tap cards to dive into sections. More visual, better for quick status check.</p>
+      <div class="pros-cons" style="margin-top: 1rem;">
+        <div class="pros">
+          <h4>Pros</h4>
+          <ul>
+            <li>Quick overview of everything</li>
+            <li>Shows coin balance prominently</li>
+            <li>Better for casual checking</li>
+          </ul>
+        </div>
+        <div class="cons">
+          <h4>Cons</h4>
+          <ul>
+            <li>Extra tap to reach matches</li>
+            <li>More scrolling on homepage</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

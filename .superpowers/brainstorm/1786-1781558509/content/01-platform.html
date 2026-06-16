@@ -1,0 +1,104 @@
+<h2>What platform will host your family betting app?</h2>
+<p class="subtitle">You mentioned it should be accessible via mobile browser in your home cloud</p>
+
+<div class="options">
+  <div class="option" data-choice="nas" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>NAS Device (Synology, QNAP, etc.)</h3>
+      <p>Already have a NAS at home - can run Docker containers or native packages</p>
+      <div class="pros-cons" style="margin-top: 1rem;">
+        <div class="pros">
+          <h4>Pros</h4>
+          <ul>
+            <li>Simple setup if you already have one</li>
+            <li>Full control over data</li>
+            <li>Low running costs</li>
+          </ul>
+        </div>
+        <div class="cons">
+          <h4>Cons</h4>
+          <ul>
+            <li>Limited if NAS is underpowered</li>
+            <li>May need port forwarding setup</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="raspberry-pi" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>Raspberry Pi / Mini PC</h3>
+      <p>Dedicated low-power device running 24/7 at home</p>
+      <div class="pros-cons" style="margin-top: 1rem;">
+        <div class="pros">
+          <h4>Pros</h4>
+          <ul>
+            <li>Very low power consumption</li>
+            <li>Affordable (~$50-100)</li>
+            <li>Full Linux environment</li>
+          </ul>
+        </div>
+        <div class="cons">
+          <h4>Cons</h4>
+          <ul>
+            <li>Need to buy hardware</li>
+            <li>Manual OS setup</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="pc-server" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>Existing PC/Laptop as Server</h3>
+      <p>Use a computer you already have running at home</p>
+      <div class="pros-cons" style="margin-top: 1rem;">
+        <div class="pros">
+          <h4>Pros</h4>
+          <ul>
+            <li>No new hardware needed</li>
+            <li>Plenty of resources</li>
+            <li>Easy development/testing</li>
+          </ul>
+        </div>
+        <div class="cons">
+          <h4>Cons</h4>
+          <ul>
+            <li>Higher power consumption</li>
+            <li>May not run 24/7</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="docker" onclick="toggleSelect(this)">
+    <div class="letter">D</div>
+    <div class="content">
+      <h3>Docker on any of the above</h3>
+      <p>Containerized setup that can run on NAS, Pi, or PC</p>
+      <div class="pros-cons" style="margin-top: 1rem;">
+        <div class="pros">
+          <h4>Pros</h4>
+          <ul>
+            <li>Easy deployment and updates</li>
+            <li>Isolated from host system</li>
+            <li>Portable across platforms</li>
+          </ul>
+        </div>
+        <div class="cons">
+          <h4>Cons</h4>
+          <ul>
+            <li>Need Docker knowledge</li>
+            <li>Slightly more overhead</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

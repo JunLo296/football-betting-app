@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/D056477/OneDrive - SAP SE/Documents/Private/FBAPP/backend/**)",
+      "Bash(node -e \"const db = require\\('./src/config/database'\\); console.log\\('Module loads successfully'\\); console.log\\('Exports:', Object.keys\\(db\\)\\);\")",
+      "Bash(cd \"/c/Users/D056477/OneDrive - SAP SE/Documents/Private/FBAPP/backend\" && wc -l src/migrations/001_initial_schema.sql && tail -5 src/migrations/001_initial_schema.sql)",
+      "Bash(cd \"/c/Users/D056477/OneDrive - SAP SE/Documents/Private/FBAPP/backend\" && echo \"=== Actual .gitignore ===\" && cat .gitignore && echo -e \"\\\\n=== Actual .env.example ===\" && cat .env.example)",
+      "Bash(npm test *)",
+      "Bash(cd \"/c/Users/D056477/OneDrive - SAP SE/Documents/Private/FBAPP/backend\" && npm test -- tests/integration/auth.test.js 2>&1 | tail -100)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(npm test)",
+      "Bash(npm create:*)",
+      "Bash(npm install:*)",
+      "Bash(timeout 10 npm run dev:*)"
+    ]
+  }
+}
