@@ -43,3 +43,20 @@ coverage/
 tmp/
 temp/
 *.tmp
+# Deployment packages
+FBAPP-deploy.zip
+FBAPP-deploy/
+FBAPP.tar.gz
+temp_deploy/
+
+# Backend environment
+backend/.env
+backend/data/
+backend/logs/
+
+# Frontend
+frontend/dist/
+frontend/node_modules/
+
+# Backend
+backend/node_modules/
