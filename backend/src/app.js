@@ -45,7 +45,22 @@ app.get('/api/health', (req, res) => {
 const publicPath = path.join(__dirname, '../public');
 app.use(express.static(publicPath));
 
-// SPA fallback removed - use separate frontend dev server in development
+// SPA fallback - serve index.html for all non-API routes
+app.get('*', (req, res) => {
+  // Don't handle API routes
+  if (req.path.startsWith('/api/')) {
+    return res.status(404).json({ error: 'API endpoint not found' });
+  }
+
+  // Serve index.html for all other routes (SPA routing)
+  const indexPath = path.join(publicPath, 'index.html');
+  res.sendFile(indexPath, (err) => {
+    if (err) {
+      console.error('Error serving index.html:', err);
+      res.status(500).send('Error loading application');
+    }
+  });
+});
 
 // Global error handler
 app.use((err, req, res, next) => {
