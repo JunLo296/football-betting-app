@@ -85,8 +85,8 @@ CREATE TABLE IF NOT EXISTS daily_coin_grants (
   UNIQUE(user_id, grant_date)
 );
 
-CREATE INDEX idx_bets_user ON bets(user_id);
-CREATE INDEX idx_bets_match ON bets(match_id);
-CREATE INDEX idx_matches_date ON matches(match_date);
-CREATE INDEX idx_matches_status ON matches(status);
-CREATE INDEX idx_special_predictions_user ON special_bet_predictions(user_id);
+CREATE INDEX IF NOT EXISTS idx_bets_user ON bets(user_id);
+CREATE INDEX IF NOT EXISTS idx_bets_match ON bets(match_id);
+CREATE INDEX IF NOT EXISTS idx_matches_date ON matches(match_date);
+CREATE INDEX IF NOT EXISTS idx_matches_status ON matches(status);
+CREATE INDEX IF NOT EXISTS idx_special_predictions_user ON special_bet_predictions(user_id);

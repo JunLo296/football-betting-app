@@ -7,6 +7,7 @@ const betRoutes = require('./routes/bets');
 const coinRoutes = require('./routes/coins');
 const leaderboardRoutes = require('./routes/leaderboard');
 const adminRoutes = require('./routes/admin');
+const specialBetsRoutes = require('./routes/specialBets');
 
 const app = express();
 
@@ -21,6 +22,7 @@ app.use('/api/bets', betRoutes);
 app.use('/api/coins', coinRoutes);
 app.use('/api/leaderboard', leaderboardRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/special-bets', specialBetsRoutes);
 
 // Health check endpoint
 app.get('/health', (req, res) => {
