@@ -197,19 +197,54 @@ class Match {
   /**
    * Confirm match result by admin
    * @param {number} id - Match ID
+   * @param {Object} resultData - Result data
+   * @param {number} resultData.home_score - Home team score
+   * @param {number} resultData.away_score - Away team score
+   * @param {string} resultData.result - Match result (home_win, draw, away_win)
    * @returns {Promise<Object>} Object with changes count
    */
-  static async confirmResult(id) {
+  static async confirmResult(id, resultData) {
+    const db = await this.getDb();
+
+    return new Promise((resolve, reject) => {
+      const { home_score, away_score, result } = resultData || {};
+
+      const sql = `
+        UPDATE matches
+        SET home_score = ?, away_score = ?, result = ?, status = 'confirmed',
+            confirmed_by_admin_at = CURRENT_TIMESTAMP, updated_at = CURRENT_TIMESTAMP
+        WHERE id = ?
+      `;
+
+      db.run(sql, [home_score, away_score, result, id], function(err) {
+        if (err) {
+          reject(err);
+          return;
+        }
+        resolve({ changes: this.changes });
+      });
+    });
+  }
+
+  /**
+   * Update match odds
+   * @param {number} id - Match ID
+   * @param {number} homeOdds - Home win odds
+   * @param {number} drawOdds - Draw odds
+   * @param {number} awayOdds - Away win odds
+   * @returns {Promise<Object>} Object with changes count
+   */
+  static async updateOdds(id, homeOdds, drawOdds, awayOdds) {
     const db = await this.getDb();
 
     return new Promise((resolve, reject) => {
       const sql = `
         UPDATE matches
-        SET status = ?, confirmed_by_admin_at = CURRENT_TIMESTAMP, updated_at = CURRENT_TIMESTAMP
+        SET home_odds = ?, draw_odds = ?, away_odds = ?, updated_at = CURRENT_TIMESTAMP
         WHERE id = ?
       `;
 
-      db.run(sql, ['confirmed', id], function(err) {
+      db.run(sql, [homeOdds, drawOdds, awayOdds, id], function(err) {
         if (err) {
           reject(err);
           return;

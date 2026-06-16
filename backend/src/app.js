@@ -6,6 +6,7 @@ const matchRoutes = require('./routes/matches');
 const betRoutes = require('./routes/bets');
 const coinRoutes = require('./routes/coins');
 const leaderboardRoutes = require('./routes/leaderboard');
+const adminRoutes = require('./routes/admin');
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use('/api/matches', matchRoutes);
 app.use('/api/bets', betRoutes);
 app.use('/api/coins', coinRoutes);
 app.use('/api/leaderboard', leaderboardRoutes);
+app.use('/api/admin', adminRoutes);
 
 // Health check endpoint
 app.get('/health', (req, res) => {

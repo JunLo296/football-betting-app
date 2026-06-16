@@ -246,12 +246,16 @@ describe('Match Model', () => {
         callback.call({ changes: 1 }, null);
       });
 
-      const result = await Match.confirmResult(1);
+      const result = await Match.confirmResult(1, {
+        home_score: 2,
+        away_score: 1,
+        result: 'home_win'
+      });
 
       expect(result).toEqual({ changes: 1 });
       expect(mockDb.run).toHaveBeenCalledWith(
         expect.stringContaining('UPDATE matches'),
-        ['confirmed', 1],
+        [2, 1, 'home_win', 1],
         expect.any(Function)
       );
     });
@@ -261,7 +265,11 @@ describe('Match Model', () => {
         callback.call({ changes: 0 }, null);
       });
 
-      const result = await Match.confirmResult(999);
+      const result = await Match.confirmResult(999, {
+        home_score: 0,
+        away_score: 0,
+        result: 'draw'
+      });
 
       expect(result).toEqual({ changes: 0 });
     });
