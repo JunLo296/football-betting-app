@@ -1,11 +1,21 @@
 <template>
   <div id="app">
     <router-view />
+    <TabNavigation v-if="showNavigation" />
   </div>
 </template>
 
 <script setup>
-// Root component with router-view for navigation
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
+import TabNavigation from './components/TabNavigation.vue'
+
+const route = useRoute()
+
+// Show navigation on all pages except login
+const showNavigation = computed(() => {
+  return route.path !== '/login'
+})
 </script>
 
 <style>
@@ -120,5 +130,25 @@ h2 {
 h3 {
   font-size: 1.25rem;
   margin-bottom: 0.5rem;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Loading spinner animation */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Fade transition */
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.3s;
+}
+
+.fade-enter-from, .fade-leave-to {
+  opacity: 0;
 }
 </style>

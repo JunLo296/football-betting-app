@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { authService } from '../services/auth'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -39,17 +40,31 @@ const router = createRouter({
   ]
 })
 
-// Navigation guard for authentication
+// Navigation guard for authentication and admin access
 router.beforeEach((to, from, next) => {
   const token = localStorage.getItem('token')
+  const isAuthenticated = authService.isAuthenticated()
+  const isAdmin = authService.isAdmin()
 
-  if (to.meta.requiresAuth && !token) {
+  // Redirect to login if authentication is required but user is not authenticated
+  if (to.meta.requiresAuth && !isAuthenticated) {
     next('/login')
-  } else if (to.path === '/login' && token) {
-    next('/matches')
-  } else {
-    next()
+    return
   }
+
+  // Redirect to matches if user is already logged in and tries to access login page
+  if (to.path === '/login' && isAuthenticated) {
+    next('/matches')
+    return
+  }
+
+  // Redirect to matches if admin access is required but user is not admin
+  if (to.meta.requiresAdmin && !isAdmin) {
+    next('/matches')
+    return
+  }
+
+  next()
 })
 
 export default router
