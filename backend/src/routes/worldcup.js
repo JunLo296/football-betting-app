@@ -7,57 +7,58 @@ const Match = require('../models/Match');
 // World Cup 2026 will run from June 11 - July 19, 2026
 // 16 groups (A-P) with 3 teams each
 // Top 2 from each group advance to Round of 32
+// Times adjusted for CET (Central European Time) viewers
 
 const worldCup2026Matches = [
-  // Group A
+  // Group A - Opening matches
   { home: 'Mexico', away: 'Canada', date: '2026-06-11', time: '20:00', group: 'A', venue: 'Mexico City' },
-  { home: 'USA', away: 'Mexico', date: '2026-06-12', time: '18:00', group: 'A', venue: 'Los Angeles' },
-  { home: 'Canada', away: 'USA', date: '2026-06-13', time: '20:00', group: 'A', venue: 'Toronto' },
+  { home: 'USA', away: 'Mexico', date: '2026-06-13', time: '02:00', group: 'A', venue: 'Los Angeles' },
+  { home: 'Canada', away: 'USA', date: '2026-06-14', time: '02:00', group: 'A', venue: 'Toronto' },
 
   // Group B
-  { home: 'England', away: 'Iran', date: '2026-06-12', time: '14:00', group: 'B', venue: 'Dallas' },
-  { home: 'Wales', away: 'England', date: '2026-06-13', time: '18:00', group: 'B', venue: 'New York' },
-  { home: 'Iran', away: 'Wales', date: '2026-06-14', time: '16:00', group: 'B', venue: 'Boston' },
+  { home: 'England', away: 'Iran', date: '2026-06-12', time: '20:00', group: 'B', venue: 'Dallas' },
+  { home: 'Wales', away: 'England', date: '2026-06-14', time: '00:00', group: 'B', venue: 'New York' },
+  { home: 'Iran', away: 'Wales', date: '2026-06-15', time: '22:00', group: 'B', venue: 'Boston' },
 
   // Group C
-  { home: 'Argentina', away: 'Saudi Arabia', date: '2026-06-12', time: '11:00', group: 'C', venue: 'Miami' },
-  { home: 'Poland', away: 'Argentina', date: '2026-06-13', time: '14:00', group: 'C', venue: 'Atlanta' },
-  { home: 'Saudi Arabia', away: 'Poland', date: '2026-06-14', time: '20:00', group: 'C', venue: 'Houston' },
+  { home: 'Argentina', away: 'Saudi Arabia', date: '2026-06-12', time: '17:00', group: 'C', venue: 'Miami' },
+  { home: 'Poland', away: 'Argentina', date: '2026-06-13', time: '20:00', group: 'C', venue: 'Atlanta' },
+  { home: 'Saudi Arabia', away: 'Poland', date: '2026-06-15', time: '02:00', group: 'C', venue: 'Houston' },
 
   // Group D
-  { home: 'France', away: 'Australia', date: '2026-06-13', time: '20:00', group: 'D', venue: 'Seattle' },
-  { home: 'Denmark', away: 'France', date: '2026-06-14', time: '18:00', group: 'D', venue: 'San Francisco' },
-  { home: 'Australia', away: 'Denmark', date: '2026-06-15', time: '14:00', group: 'D', venue: 'Vancouver' },
+  { home: 'France', away: 'Australia', date: '2026-06-14', time: '02:00', group: 'D', venue: 'Seattle' },
+  { home: 'Denmark', away: 'France', date: '2026-06-15', time: '00:00', group: 'D', venue: 'San Francisco' },
+  { home: 'Australia', away: 'Denmark', date: '2026-06-15', time: '20:00', group: 'D', venue: 'Vancouver' },
 
   // Group E
-  { home: 'Spain', away: 'Costa Rica', date: '2026-06-14', time: '11:00', group: 'E', venue: 'Kansas City' },
-  { home: 'Germany', away: 'Spain', date: '2026-06-15', time: '20:00', group: 'E', venue: 'Philadelphia' },
-  { home: 'Costa Rica', away: 'Germany', date: '2026-06-16', time: '18:00', group: 'E', venue: 'Chicago' },
+  { home: 'Spain', away: 'Costa Rica', date: '2026-06-14', time: '17:00', group: 'E', venue: 'Kansas City' },
+  { home: 'Germany', away: 'Spain', date: '2026-06-16', time: '02:00', group: 'E', venue: 'Philadelphia' },
+  { home: 'Costa Rica', away: 'Germany', date: '2026-06-17', time: '00:00', group: 'E', venue: 'Chicago' },
 
   // Group F
-  { home: 'Belgium', away: 'Morocco', date: '2026-06-14', time: '14:00', group: 'F', venue: 'Montreal' },
-  { home: 'Croatia', away: 'Belgium', date: '2026-06-15', time: '18:00', group: 'F', venue: 'Detroit' },
-  { home: 'Morocco', away: 'Croatia', date: '2026-06-16', time: '14:00', group: 'F', venue: 'Edmonton' },
+  { home: 'Belgium', away: 'Morocco', date: '2026-06-14', time: '20:00', group: 'F', venue: 'Montreal' },
+  { home: 'Croatia', away: 'Belgium', date: '2026-06-16', time: '00:00', group: 'F', venue: 'Detroit' },
+  { home: 'Morocco', away: 'Croatia', date: '2026-06-16', time: '20:00', group: 'F', venue: 'Edmonton' },
 
   // Group G
-  { home: 'Brazil', away: 'Serbia', date: '2026-06-15', time: '20:00', group: 'G', venue: 'Las Vegas' },
-  { home: 'Switzerland', away: 'Brazil', date: '2026-06-16', time: '18:00', group: 'G', venue: 'Denver' },
-  { home: 'Serbia', away: 'Switzerland', date: '2026-06-17', time: '14:00', group: 'G', venue: 'Nashville' },
+  { home: 'Brazil', away: 'Serbia', date: '2026-06-16', time: '02:00', group: 'G', venue: 'Las Vegas' },
+  { home: 'Switzerland', away: 'Brazil', date: '2026-06-17', time: '00:00', group: 'G', venue: 'Denver' },
+  { home: 'Serbia', away: 'Switzerland', date: '2026-06-17', time: '20:00', group: 'G', venue: 'Nashville' },
 
   // Group H
-  { home: 'Portugal', away: 'Ghana', date: '2026-06-16', time: '20:00', group: 'H', venue: 'Washington DC' },
-  { home: 'Uruguay', away: 'Portugal', date: '2026-06-17', time: '18:00', group: 'H', venue: 'Cincinnati' },
-  { home: 'Ghana', away: 'Uruguay', date: '2026-06-18', time: '14:00', group: 'H', venue: 'Minneapolis' },
+  { home: 'Portugal', away: 'Ghana', date: '2026-06-17', time: '02:00', group: 'H', venue: 'Washington DC' },
+  { home: 'Uruguay', away: 'Portugal', date: '2026-06-18', time: '00:00', group: 'H', venue: 'Cincinnati' },
+  { home: 'Ghana', away: 'Uruguay', date: '2026-06-18', time: '20:00', group: 'H', venue: 'Minneapolis' },
 
   // Group I
-  { home: 'Netherlands', away: 'Senegal', date: '2026-06-16', time: '14:00', group: 'I', venue: 'Baltimore' },
-  { home: 'Ecuador', away: 'Netherlands', date: '2026-06-17', time: '20:00', group: 'I', venue: 'Phoenix' },
-  { home: 'Senegal', away: 'Ecuador', date: '2026-06-18', time: '18:00', group: 'I', venue: 'Monterrey' },
+  { home: 'Netherlands', away: 'Senegal', date: '2026-06-16', time: '20:00', group: 'I', venue: 'Baltimore' },
+  { home: 'Ecuador', away: 'Netherlands', date: '2026-06-18', time: '02:00', group: 'I', venue: 'Phoenix' },
+  { home: 'Senegal', away: 'Ecuador', date: '2026-06-19', time: '00:00', group: 'I', venue: 'Monterrey' },
 
   // Group J
-  { home: 'Japan', away: 'Colombia', date: '2026-06-17', time: '14:00', group: 'J', venue: 'Tampa' },
-  { home: 'South Korea', away: 'Japan', date: '2026-06-18', time: '20:00', group: 'J', venue: 'Orlando' },
-  { home: 'Colombia', away: 'South Korea', date: '2026-06-19', time: '18:00', group: 'J', venue: 'Guadalajara' },
+  { home: 'Japan', away: 'Colombia', date: '2026-06-17', time: '20:00', group: 'J', venue: 'Tampa' },
+  { home: 'South Korea', away: 'Japan', date: '2026-06-19', time: '02:00', group: 'J', venue: 'Orlando' },
+  { home: 'Colombia', away: 'South Korea', date: '2026-06-20', time: '00:00', group: 'J', venue: 'Guadalajara' },
 ];
 
 router.get('/add-world-cup-matches', async (req, res) => {
