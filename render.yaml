@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: football-betting-app
+    env: node
+    region: frankfurt
+    buildCommand: cd frontend && npm install && npm run build && cd ../backend && npm install
+    startCommand: cd backend && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_PATH
+        value: /opt/render/project/data/betting.db
